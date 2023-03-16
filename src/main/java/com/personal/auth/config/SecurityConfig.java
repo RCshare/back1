@@ -26,6 +26,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -58,7 +61,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf()
+        http.cors().and() // Ajouter cette ligne pour autoriser CORS
+                .csrf()
                 .disable()
                 .authorizeRequests()
                 .requestMatchers(HttpMethod.DELETE)
@@ -69,6 +73,7 @@ public class SecurityConfig {
                 .hasAnyRole("USER", "ADMIN")
                 .requestMatchers("/login/**")
                 .anonymous()
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Autoriser les requêtes pré-vol (OPTIONS)
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -78,6 +83,7 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+
 
         return http.build();
     }
@@ -90,6 +96,7 @@ public class SecurityConfig {
                 .ignoring()
                 .requestMatchers("/css/**", "/js/**", "/img/**", "/lib/**", "/favicon.ico");
     }
+
 
 }
 
