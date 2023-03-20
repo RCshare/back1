@@ -8,6 +8,8 @@ CREATE TABLE public.articles (
 	"name" varchar NULL
 );
 CREATE TABLE public.user_favorite (
-	id_user int NOT NULL GENERATED ALWAYS AS IDENTITY,
-	id_article int NOT NULL GENERATED ALWAYS AS IDENTITY
+	id_user int NOT NULL,
+	id_article int NOT NULL,
+	PRIMARY KEY (id_user, id_article)
 );
+
