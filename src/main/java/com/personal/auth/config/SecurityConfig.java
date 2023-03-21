@@ -7,6 +7,7 @@ import com.personal.auth.filter.JwtRequestFilter;
 import com.personal.auth.repository.UserRepository;
 import com.personal.auth.service.CustomUserDetailsService;
 import com.personal.auth.service.JwtUserDetailsService;
+import com.personal.auth.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +19,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -27,8 +29,11 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -43,6 +48,8 @@ public class SecurityConfig {
     private UserRepository userRepository;
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
+    @Autowired
+    private JwtUtil jwtTokenProvider;
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         CustomUserDetailsService.setUserRepository(userRepository);
@@ -64,7 +71,7 @@ public class SecurityConfig {
         http.cors().and() // Ajouter cette ligne pour autoriser CORS
                 .csrf()
                 .disable()
-                .authorizeRequests()
+                .authorizeHttpRequests()
                 .requestMatchers(HttpMethod.DELETE)
                 .hasRole("ADMIN")
                 .requestMatchers("/admin/**")
@@ -82,7 +89,10 @@ public class SecurityConfig {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+                .apply(new JwtConfigurer())
+                .and()
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+
 
 
         return http.build();
@@ -95,6 +105,18 @@ public class SecurityConfig {
         return (web) -> web.debug(true)
                 .ignoring()
                 .requestMatchers("/css/**", "/js/**", "/img/**", "/lib/**", "/favicon.ico");
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
 
