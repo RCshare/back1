@@ -1,15 +1,24 @@
-CREATE TABLE public."user" (
-	id int NOT NULL GENERATED ALWAYS AS IDENTITY,
-	username varchar NOT NULL,
-	"password" varchar NOT NULL
+CREATE TABLE "_user" (
+    id SERIAL PRIMARY KEY,
+    firstname VARCHAR(255),
+    lastname VARCHAR(255),
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(255) NOT NULL
 );
-CREATE TABLE public.articles (
-	id int NOT NULL GENERATED ALWAYS AS IDENTITY,
-	"name" varchar NULL
+
+CREATE TABLE token (
+    id SERIAL PRIMARY KEY,
+    token VARCHAR(255) UNIQUE NOT NULL,
+    token_type VARCHAR(255) NOT NULL,
+    revoked BOOLEAN NOT NULL,
+    expired BOOLEAN NOT NULL,
+    user_id INTEGER REFERENCES "_user" (id) ON DELETE CASCADE
 );
-CREATE TABLE public.user_favorite (
-	id_user int NOT NULL,
-	id_article int NOT NULL,
-	PRIMARY KEY (id_user, id_article)
-);
+
+CREATE SEQUENCE _user_seq INCREMENT 50;
+CREATE SEQUENCE _token_seq INCREMENT 50;
+CREATE SEQUENCE token_seq INCREMENT 50;
+CREATE SEQUENCE user_seq INCREMENT 50;
+
 
