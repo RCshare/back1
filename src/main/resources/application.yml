@@ -1,0 +1,9 @@
+# Eureka application.yml
+server:
+  port: 8761
+eureka:
+  client:
+    registerWithEureka: false # Ne pas s'enregistrer auprès du service Eureka.
+    fetchRegistry: false # Ne cache pas les informations de registre localement.
+  server:
+    waitTimeInMsWhenSyncEmpty: 5 # Temps initial d'attente avant que le serveur accepte les demandes
