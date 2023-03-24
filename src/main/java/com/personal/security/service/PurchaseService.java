@@ -21,8 +21,8 @@ public class PurchaseService {
     private final PurchaseItemRepository purchaseItemRepository;
 
 
-    public Map<Category, List<Article>> getPurchasedArticlesByCategory(User user) {
-        Map<Category, List<Article>> result = new HashMap<>();
+    public List<Category> getPurchasedArticlesByCategory(User user) {
+        Map<Category, List<Article>> categoryMap = new HashMap<>();
 
         // Récupérer la liste des achats de l'utilisateur
         List<Purchase> purchases = purchaseRepository.findByBuyer(user);
@@ -34,13 +34,21 @@ public class PurchaseService {
                 Article article = purchaseItem.getArticle();
                 if (article != null && article.getCategory() != null) {
                     Category category = article.getCategory();
-                    List<Article> articlesInCategory = result.computeIfAbsent(category, k -> new ArrayList<>());
+                    List<Article> articlesInCategory = categoryMap.computeIfAbsent(category, k -> new ArrayList<>());
                     articlesInCategory.add(article);
                 }
             }
         }
 
+        List<Category> result = new ArrayList<>();
+        for (Map.Entry<Category, List<Article>> entry : categoryMap.entrySet()) {
+            Category category = entry.getKey();
+            category.setArticles(entry.getValue());
+            result.add(category);
+        }
+
         return result;
     }
+
 
 }

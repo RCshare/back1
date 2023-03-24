@@ -37,7 +37,7 @@ public class SecurityConfiguration {
         .disable()
             .cors(withDefaults()) // activer la configuration CORS
             .authorizeHttpRequests()
-        .requestMatchers("/api/v1/auth/**")
+        .requestMatchers("/api/v1/**")
           .permitAll()
         .anyRequest()
           .authenticated()
@@ -64,7 +64,7 @@ public class SecurityConfiguration {
     configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "OPTIONS"));
     configuration.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization"));
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/api/v1/auth/**", configuration);
+    source.registerCorsConfiguration("/api/v1/**", configuration);
     return source;
   }
 }

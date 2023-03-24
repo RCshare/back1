@@ -25,12 +25,13 @@ public class PurchaseController {
     private final PurchaseService purchaseService;
 
     @GetMapping("/purchasedArticlesByCategory")
-    public ResponseEntity<Map<Category, List<Article>>> getPurchasedArticlesByCategory() {
+    public ResponseEntity<List<Category>> getPurchasedArticlesByCategory() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
 
-        Map<Category, List<Article>> purchasedArticlesByCategory = purchaseService.getPurchasedArticlesByCategory(user);
+        List<Category> purchasedArticlesByCategory = purchaseService.getPurchasedArticlesByCategory(user);
 
         return ResponseEntity.ok(purchasedArticlesByCategory);
     }
+
 }

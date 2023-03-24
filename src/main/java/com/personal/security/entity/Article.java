@@ -1,10 +1,8 @@
 package com.personal.security.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -24,9 +22,11 @@ public class Article {
     private String description;
     private Double price;
 
+    @JsonIgnore
     @ManyToOne
     private Category category;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "article")
     private List<PurchaseItem> purchaseItems;
 
