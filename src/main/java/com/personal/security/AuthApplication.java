@@ -1,4 +1,4 @@
-package com.personal.auth;
+package com.personal.security;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,4 +10,5 @@ public class AuthApplication {
 		SpringApplication.run(AuthApplication.class, args);
 	}
 
+	
 }
