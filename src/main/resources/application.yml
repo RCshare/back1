@@ -1,3 +1,11 @@
-# Eureka application.yml
+spring:
+  application:
+    name: service-back1
 server:
-  port: 8761
+  port: 8081
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+  instance:
+    preferIpAddress: true
