@@ -1,3 +1,8 @@
+INSERT INTO public."_user"
+(id, firstname, lastname, email, "password", "role")
+VALUES(1, 'John', 'Doe', 'john.doe@example.com', '$2a$10$W5mcD1TzXzycIi4Qp3GUc.GXGpSNn/KHhGoGCMLzLtwLSv0y9X0fu', 'USER');
+
+
 -- Insérer des catégories
 INSERT INTO category (id, name) VALUES
     (1, 'Electronics'),
